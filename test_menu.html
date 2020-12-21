@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>elementUI-NavMenu 导航菜单动态渲染(递归)</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body,
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+
+    .warp-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+    }
+
+    .warp-left {
+      width: 240px;
+      height: 100%;
+      border-right: 1px solid #e6e6e6;
+    }
+
+    .warp-right {
+      flex: 1;
+    }
+
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+
+    .el-menu {
+      border-right: none;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-auto {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="warp-container">
+    <el-scrollbar class="warp-left" ref="scrollbarRef">
+      <el-menu default-active="/demo133">
+        <sub-menu :menu-list="list" :props="defaultProps" @getmenu="onGetMenu" />
+      </el-menu>
+    </el-scrollbar>
+<!--    <el-scrollbar class="warp-right" ref="scrollbarRef">-->
+<!--      <div class="flex">-->
+<!--        <div flex="flex-auto">-->
+<!--							<pre>-->
+<!--								{{ list }}-->
+<!--							</pre>-->
+<!--        </div>-->
+<!--        <div flex="flex-auto" style="padding-top: 30px;">-->
+<!--          <span>选中的数据：</span>-->
+<!--          <pre>-->
+<!--								{{ selMenuData }}-->
+<!--							</pre>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </el-scrollbar>-->
+  </div>
+</div>
+
+<script type="text/javascript">
+  Vue.component('sub-menu', {
+    template: `
+						<div>
+							<div v-for="(val, key) in menuList" :key="key">
+								<el-submenu :index="val[props.index]" v-if="val[props.children] && val[props.children].length > 0">
+									<template slot="title">
+										<i :class="val.icon"></i>
+										<span>{{val[props.label]}}</span>
+									</template>
+									<sub-menu :menu-list="val[props.children]" :props="props" @getmenu="onMenuItemClick"/>
+								</el-submenu>
+								<el-menu-item :index="val[props.index]" v-else @click="onMenuItemClick(val)">
+									<template slot="title">
+										<i :class="val.icon"></i>
+										<span>{{val[props.label]}}</span>
+									</template>
+								</el-menu-item>
+							</div>
+						</div>
+					`,
+    props: {
+      menuList: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      props: {
+        type: Object,
+        default () {
+          return {
+            children: 'children',
+            label: 'label',
+            index: 'id'
+          }
+        }
+      }
+    },
+    methods: {
+      onMenuItemClick(item) {
+        this.$emit('getmenu', item)
+      }
+    }
+  })
+
+  const vm = new Vue({
+    el: '#app',
+    data() {
+      return {
+        selMenuData: {},
+        defaultProps: {
+          children: 'aaa',
+          label: 'title',
+          index: 'path'
+        },
+        list: [{
+          id: 1,
+          title: '测试1',
+          path: '/demo1',
+          icon: 'el-icon-location',
+          aaa: [{
+            id: 12,
+            title: '测试12',
+            path: '/demo12',
+            icon: 'el-icon-location',
+            aaa: [{
+              id: 122,
+              title: '测试122',
+              path: '/demo122',
+              icon: 'el-icon-location',
+            }]
+          },
+            {
+              id: 13,
+              title: '测试13',
+              path: '/demo13',
+              icon: 'el-icon-location',
+              aaa: [{
+                id: 133,
+                title: '测试133',
+                path: '/demo133',
+                icon: 'el-icon-location',
+              }]
+            }
+          ]
+        },
+          {
+            id: 2,
+            title: '测试2',
+            path: '/demo2',
+            icon: 'el-icon-location',
+            aaa: []
+          },
+          {
+            id: 3,
+            title: '测试3',
+            path: '/demo3',
+            icon: 'el-icon-location',
+            aaa: [{
+              id: 31,
+              title: '测试31',
+              path: '/demo31',
+              icon: 'el-icon-location',
+            },
+              {
+                id: 32,
+                title: '测试32',
+                path: '/demo32',
+                icon: 'el-icon-location',
+              }
+            ]
+          }
+        ]
+      }
+    },
+    methods: {
+      onGetMenu(item) {
+        this.selMenuData = item
+        // this.$router.push({
+        // 	path: item.path,
+        // 	query: {
+        // 		t: new Date().getTime()
+        // 	}
+        // })
+      }
+    }
+  })
+</script>
+</body>
+</html>
+``

@@ -1,0 +1,26 @@
+# 安装docker
+apt install docker.io
+
+# 拉取nginx镜像
+docker pull nginx
+
+# 构建
+docker build -t test .
+
+# 运行
+docker run -it -p 82:80 id
+
+# 查看容器
+docker ps -a
+
+# 先暂停容器
+docker stop id
+
+# 后删除容器
+docker rm -f e9463e0a9373
+
+# 删除镜像
+docker images
+docker rmi img-id
+
+
