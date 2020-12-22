@@ -1,30 +1,11 @@
 <template xmlns="http://www.w3.org/1999/html">
   <el-container>
     <el-header>
-      <el-menu :default-active="activeIndex" class="el-menu-header" mode="horizontal" @select="">
-        <el-menu-item index="1"><router-link :to="{path: '/cloud/index' }">首页</router-link></el-menu-item>
-        <el-menu-item index="2"><router-link :to="{path: '/cloud/list' }">服务器列表</router-link></el-menu-item>
-        <el-menu-item index="3">控制台</el-menu-item>
-        <el-menu-item index="4">消息中心</el-menu-item>
-        <el-menu-item index="5"><router-link :to="{path: '/cloud/about' }">关于我们</router-link></el-menu-item>
-        <el-menu-item>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-<!--            <el-dropdown-item>登录</el-dropdown-item>-->
-            <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        </el-menu-item>
-      </el-menu>
+      <CloudTabHead></CloudTabHead>
     </el-header>
     <el-container  style="height: 620px; border: 1px solid #eee">
       <el-aside width="200px">
-        <el-menu>
-          <navigation-item v-for="(menu,i) in menuList" :key="i" :item="menu"/>
-        </el-menu>
+        <CloudTabLeft></CloudTabLeft>
       </el-aside>
       <el-container>
         <el-main>
@@ -94,9 +75,11 @@
       import store from '../store'
       import {formatDate} from '../utils/formatDate.js'
       import HighCharts from 'highcharts'
+      import CloudTabLeft from "./CloudTabLeft";
+      import CloudTabHead from "./CloudTabHead";
       export default {
           name: "CloudServerDetailMonitorResolve",
-          components: { navigationItem },
+          components: { CloudTabHead, CloudTabLeft },
           data() {
             return {
               userName: "",
